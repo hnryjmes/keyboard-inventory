@@ -2,8 +2,11 @@
   "name": "keyboard-inventory",
   "version": "1.0.0",
   "description": "Tutorial: Use TypeScript to Build a Node API with Express",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build": "tsc",
+    "prestart": "npm run build",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
