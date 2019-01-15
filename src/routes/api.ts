@@ -75,4 +75,21 @@ export const register = (app: express.Application) => {
       res.json({ error: err.message });
     }
   });
+
+  app.post(`/api/keyboards/add`, oidc.ensureAuthenticated(), async (req: any, res) => {
+    try {
+      const userId = req.userContext.userinfo.sub;
+      const id = await db.one(`
+        INSERT INTO keyboards(user_id, brand, model, year, color)
+        VALUES($[userId], $[brand], $[model], $[year], $[color])
+        RETURNING id;`,
+        { userId, ...req.body });
+      return res.json({ id });
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+      res.json({ error: err.message || err });
+    }
+  });
+
 };
