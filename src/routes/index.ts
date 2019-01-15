@@ -21,6 +21,6 @@ export const register = (app: express.Application) => {
 
   // define a secure route handler for the keyboards page
   app.get("/keyboards", oidc.ensureAuthenticated(), (req: any, res) => {
-    res.render("guitars");
+    res.render("keyboards");
   });
 };
