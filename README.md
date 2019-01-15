@@ -21,3 +21,7 @@ This example application uses:
 * [Vue](https://vuejs.org/)
 * [Materialize](https://materializecss.com/)
 * [Axios](https://github.com/axios/axios)
+
+### Usage
+
+To clone and run the application locally, follow the usage instructions at the original repository here: https://github.com/oktadeveloper/okta-node-express-typescript-vue-example
