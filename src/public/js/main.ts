@@ -50,7 +50,7 @@ new Vue({
         });
     },
     confirmDeleteKeyboard(id: string) {
-      const keyboard = this.keyboards.find((g: any) => g.id === id);
+      const keyboard = this.keyboards.find((k: any) => k.id === id);
       this.selectedKeyboard = `${keyboard.year} ${keyboard.brand} ${keyboard.model}`;
       this.selectedKeyboardId = keyboard.id;
       const dc = this.$refs.deleteConfirm;
