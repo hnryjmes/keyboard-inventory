@@ -99,5 +99,43 @@ exports.register = (app) => {
             res.json({ error: err.message || err });
         }
     }));
+    app.post(`/api/keyboards/update`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userId = req.userContext.userinfo.sub;
+            const id = yield db.one(`
+        UPDATE keyboards
+        SET brand = $[brand]
+            , model = $[model]
+            , year = $[year]
+            , color = $[color]
+        WHERE
+            id = $[id]
+            AND user_id = $[user_id]
+        RETURNING
+            id;`, Object.assign({ userId }, req.body));
+            return res.json({ id });
+        }
+        catch (err) {
+            // tslint:disable-next-line:no-console
+            console.error(err);
+            res.json({ error: err.message || err });
+        }
+    }));
+    app.delete(`/api/keyboards/remove/:id`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userId = req.userContext.userinfo.sub;
+            const id = yield db.result(`
+        DELETE
+        FROM    keyboards
+        WHERE   user_id = $[userId]
+        AND     id = $[id]`, { userId, id: req.params.id }, (r) => r.rowCount);
+            return res.json({ id });
+        }
+        catch (err) {
+            // tslint:disable-next-line:no-console
+            console.error(err);
+            res.json({ error: err.message || err });
+        }
+    }));
 };
 //# sourceMappingURL=api.js.map

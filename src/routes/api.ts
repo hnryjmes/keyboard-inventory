@@ -92,4 +92,43 @@ export const register = (app: express.Application) => {
     }
   });
 
+  app.post(`/api/keyboards/update`, oidc.ensureAuthenticated(), async (req: any, res) => {
+    try {
+      const userId = req.userContext.userinfo.sub;
+      const id = await db.one(`
+        UPDATE keyboards
+        SET brand = $[brand]
+            , model = $[model]
+            , year = $[year]
+            , color = $[color]
+        WHERE
+            id = $[id]
+            AND user_id = $[user_id]
+        RETURNING
+            id;`,
+        { userId, ...req.body });
+      return res.json({ id });
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+      res.json({ error: err.message || err });
+    }
+  });
+
+  app.delete(`/api/keyboards/remove/:id`, oidc.ensureAuthenticated(), async (req: any, res) => {
+    try {
+      const userId = req.userContext.userinfo.sub;
+      const id = await db.result(`
+        DELETE
+        FROM    keyboards
+        WHERE   user_id = $[userId]
+        AND     id = $[id]`,
+        { userId, id: req.params.id }, (r) => r.rowCount);
+      return res.json({ id });
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+      res.json({ error: err.message || err });
+    }
+  });
 };
