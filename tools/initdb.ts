@@ -21,6 +21,7 @@ const init = async () => {
       }
     }
   } catch (err) {
+    // tslint:disable-next-line: no-console
     console.log(err);
     throw err;
   } finally {
@@ -30,7 +31,9 @@ const init = async () => {
 };
 
 init().then(() => {
+  // tslint:disable-next-line: no-console
   console.log("finished");
 }).catch(() => {
+  // tslint:disable-next-line: no-console
   console.log("finished with errors");
 });
