@@ -5,7 +5,8 @@ export const register = (app: express.Application) => {
 
   // define a route handler for the default home page
   app.get("/", (req: any, res) => {
-    res.render("index");
+    const user = req.userContext ? req.userContext.userinfo : null;
+    res.render("index", { isAuthenticated: req.isAuthenticated(), user });
   });
 
   // define a secure route handler for the login page that redirects to /keyboards
@@ -21,6 +22,7 @@ export const register = (app: express.Application) => {
 
   // define a secure route handler for the keyboards page
   app.get("/keyboards", oidc.ensureAuthenticated(), (req: any, res) => {
-    res.render("keyboards");
+    const user = req.userContext ? req.userContext.userinfo : null;
+    res.render("keyboards", { isAuthenticated: req.isAuthenticated(), user });
   });
 };

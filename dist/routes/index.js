@@ -4,7 +4,8 @@ exports.register = (app) => {
     const oidc = app.locals.oidc;
     // define a route handler for the default home page
     app.get("/", (req, res) => {
-        res.render("index");
+        const user = req.userContext ? req.userContext.userinfo : null;
+        res.render("index", { isAuthenticated: req.isAuthenticated(), user });
     });
     // define a secure route handler for the login page that redirects to /keyboards
     app.get("/login", oidc.ensureAuthenticated(), (req, res) => {
@@ -17,7 +18,8 @@ exports.register = (app) => {
     });
     // define a secure route handler for the keyboards page
     app.get("/keyboards", oidc.ensureAuthenticated(), (req, res) => {
-        res.render("keyboards");
+        const user = req.userContext ? req.userContext.userinfo : null;
+        res.render("keyboards", { isAuthenticated: req.isAuthenticated(), user });
     });
 };
 //# sourceMappingURL=index.js.map
