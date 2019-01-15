@@ -15,7 +15,7 @@ const init = async () => {
     // split the file into separate statements
     const statements = sql.split(/;\s*$/m);
     for (const statement of statements) {
-      if (statement.length > 3 {
+      if (statement.length > 3) {
         // execute each of the statements
         await client.query(statement);
       }
