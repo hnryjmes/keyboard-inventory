@@ -21,6 +21,8 @@ dotenv_1.default.config();
 // as if it were an environment variable
 const port = process.env.SERVER_PORT;
 const app = express_1.default();
+// Configure Express to parse incoming JSON data
+app.use(express_1.default.json());
 // Configure Express to use EJS
 app.set("views", path_1.default.join(__dirname, "views"));
 app.set("view engine", "ejs");
