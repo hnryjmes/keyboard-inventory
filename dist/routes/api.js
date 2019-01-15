@@ -23,34 +23,34 @@ exports.register = (app) => {
     };
     const pgp = pg_promise_1.default();
     const db = pgp(config);
-    app.get(`/api/keyboards/all`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get("/api/keyboards/all", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const keyboards = yield db.any(`
-        SELECT
-            id
-            , brand
-            , model
-            , year
-            , color
-        FROM    keyboards
-        WHERE   user_id = $[userId]
-        ORDER BY year, brand, model`, { userId });
+                SELECT
+                    id
+                    , brand
+                    , model
+                    , year
+                    , color
+                FROM    keyboards
+                WHERE   user_id = $[userId]
+                ORDER BY year, brand, model`, { userId });
             return res.json(keyboards);
         }
         catch (err) {
-            // tslint:disable-next-line: no-console
-            console.error(err);
+            // tslint:disable-next-line:no-console
+            console.error(err); // eslint-disable-line no-console
             res.json({ error: err.message || err });
         }
     }));
-    app.get(`/api/keyboards/total`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get("/api/keyboards/total", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const total = yield db.one(`
-      SELECT  count(*) AS total
-      FROM    keyboards
-      WHERE   user_id = $[userId]`, { userId }, (data) => {
+            SELECT  count(*) AS total
+            FROM    keyboards
+            WHERE   user_id = $[userId]`, { userId }, (data) => {
                 return {
                     total: +data.total
                 };
@@ -59,81 +59,81 @@ exports.register = (app) => {
         }
         catch (err) {
             // tslint:disable-next-line:no-console
-            console.error(err);
+            console.error(err); // eslint-disable-line no-console
             res.json({ error: err.message || err });
         }
     }));
-    app.get(`/api/keyboards/find/:search`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get("/api/keyboards/find/:search", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const keyboards = yield db.any(`
-        SELECT
-            id
-            , brand
-            , model
-            , year
-            , color
-        FROM    keyboards
-        WHERE   user_id = $[userId]
-        AND    (brand ILIKE $[search] OR model ILIKE $[search])`, { userId, search: `%${req.params.search}%` });
+                SELECT
+                    id
+                    , brand
+                    , model
+                    , year
+                    , color
+                FROM    keyboards
+                WHERE   user_id = $[userId]
+                AND   ( brand ILIKE $[search] OR model ILIKE $[search] )`, { userId, search: `%${req.params.search}%` });
             return res.json(keyboards);
         }
         catch (err) {
             // tslint:disable-next-line:no-console
-            console.error(err);
-            res.json({ error: err.message });
+            console.error(err); // eslint-disable-line no-console
+            res.json({ error: err.message || err });
         }
     }));
-    app.post(`/api/keyboards/add`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.post("/api/keyboards/add", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const id = yield db.one(`
-        INSERT INTO keyboards(user_id, brand, model, year, color)
-        VALUES($[userId], $[brand], $[model], $[year], $[color])
-        RETURNING id;`, Object.assign({ userId }, req.body));
+                INSERT INTO keyboards( user_id, brand, model, year, color )
+                VALUES( $[userId], $[brand], $[model], $[year], $[color] )
+                RETURNING id;`, Object.assign({ userId }, req.body));
             return res.json({ id });
         }
         catch (err) {
             // tslint:disable-next-line:no-console
-            console.error(err);
+            console.error(err); // eslint-disable-line no-console
             res.json({ error: err.message || err });
         }
     }));
-    app.post(`/api/keyboards/update`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.post("/api/keyboards/update", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const id = yield db.one(`
-        UPDATE keyboards
-        SET brand = $[brand]
-            , model = $[model]
-            , year = $[year]
-            , color = $[color]
-        WHERE
-            id = $[id]
-            AND user_id = $[user_id]
-        RETURNING
-            id;`, Object.assign({ userId }, req.body));
+                UPDATE keyboards
+                SET brand = $[brand]
+                    , model = $[model]
+                    , year = $[year]
+                    , color = $[color]
+                WHERE
+                    id = $[id]
+                    AND user_id = $[userId]
+                RETURNING
+                    id;`, Object.assign({ userId }, req.body));
             return res.json({ id });
         }
         catch (err) {
             // tslint:disable-next-line:no-console
-            console.error(err);
+            console.error(err); // eslint-disable-line no-console
             res.json({ error: err.message || err });
         }
     }));
-    app.delete(`/api/keyboards/remove/:id`, oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.delete("/api/keyboards/remove/:id", oidc.ensureAuthenticated(), (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const userId = req.userContext.userinfo.sub;
             const id = yield db.result(`
-        DELETE
-        FROM    keyboards
-        WHERE   user_id = $[userId]
-        AND     id = $[id]`, { userId, id: req.params.id }, (r) => r.rowCount);
+                DELETE
+                FROM    keyboards
+                WHERE   user_id = $[userId]
+                AND     id = $[id]`, { userId, id: req.params.id }, (r) => r.rowCount);
             return res.json({ id });
         }
         catch (err) {
             // tslint:disable-next-line:no-console
-            console.error(err);
+            console.error(err); // eslint-disable-line no-console
             res.json({ error: err.message || err });
         }
     }));

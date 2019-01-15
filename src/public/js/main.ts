@@ -2,10 +2,11 @@ import axios from "axios";
 import * as M from "materialize-css";
 import Vue from "vue";
 
-// tslint:disable-next-line no-unused-expression
+// tslint:disable no-unused-expression
 new Vue({
+  // eslint-disable-line no-new
   computed: {
-    hasKeyboards(): boolean {
+    hazKeyboards(): boolean {
       return this.isLoading === false && this.keyboards.length > 0;
     },
     noKeyboards(): boolean {
@@ -44,25 +45,26 @@ new Vue({
           this.loadKeyboards();
         })
         .catch((err: any) => {
-          // tslint:disable-next-line:no-console
-          console.log(err);
+          // tslint:disable no-console
+          console.log(err); // eslint-disable-line no-console
         });
     },
     confirmDeleteKeyboard(id: string) {
-      const keyboard = this.keyboards.find((k: any) => k.id === id);
-      this.selectedKeyboard = `${ keyboard.year } ${ keyboard.brand } ${ keyboard.model }`;
+      const keyboard = this.keyboards.find((g: any) => g.id === id);
+      this.selectedKeyboard = `${keyboard.year} ${keyboard.brand} ${keyboard.model}`;
       this.selectedKeyboardId = keyboard.id;
       const dc = this.$refs.deleteConfirm;
       const modal = M.Modal.init(dc);
+      // const modal = M.Modal.getInstance( dc );
       modal.open();
     },
     deleteKeyboard(id: string) {
       axios
-        .delete(`/api/keyboards/remove/${ id }`)
+        .delete(`/api/keyboards/remove/${id}`)
         .then(this.loadKeyboards)
         .catch((err: any) => {
-          // tslint:disable-next-line:no-console
-          console.log(err);
+          // tslint:disable no-console
+          console.log(err); // eslint-disable-line no-console
         });
     },
     loadKeyboards() {
@@ -73,8 +75,8 @@ new Vue({
           this.keyboards = res.data;
         })
         .catch((err: any) => {
-          // tslint:disable-next-line:no-console
-          console.log(err);
+          // tslint:disable no-console
+          console.log(err); // eslint-disable-line no-console
         });
     }
   },
